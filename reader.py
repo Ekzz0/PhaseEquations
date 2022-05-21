@@ -2,7 +2,9 @@ import pandas as pd
 from Model.PhaseModel import PhaseModel
 import matplotlib.pyplot as plt
 
-pth = r"C:\Users\Egor\Documents\CourseProject\Test.xlsx"
+
+
+pth = r"D:\Программирование\ForPolitech\PhaseEquations\Test.xlsx"
 model = PhaseModel()
 data = pd.read_excel(pth)
 dict ={"CH4":0,
@@ -22,16 +24,14 @@ for name in data['name'].values[:]:
     model.massFractions[dict[name]] = data['z'].values[ind]
     ind+=1
 
-model.Pressure = 5
+model.Pressure = 3
 model.currentT =10
-model.maximumPressure =8
+model.maximumPressure =4
 model.minimalPressure =3
-model.Pstep = 0.5
+model.Pstep = 0.1
 
 X,Y1,Y2 = model.graph(model.massFractions, model.acentricFactor, model.criticalPressure,
                                                model.criticalTemperature, model.Pressure, model.currentT, model.c_ij)
-
-
 fig = plt.figure()
 plt.xlabel(u'Давление [МПа]', fontsize=12)
 plt.ylabel(u'Процент жидкой фазы [%]', fontsize=12)
@@ -43,3 +43,4 @@ fig.legend(loc='center right')
 plt.savefig('L(P)')
 plt.grid(True, color='black')
 plt.show()
+

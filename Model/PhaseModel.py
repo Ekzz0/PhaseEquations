@@ -2,6 +2,7 @@ import numpy as np
 import math
 from math import log as ln
 
+
 class PhaseModel(object):
     """
     Класс FilterModel представляет собой реализацию модели данных
@@ -612,11 +613,13 @@ class PhaseModel(object):
             yield x
             x += step
 
+
+
     def graph(self, massFractions, acentricFactor, criticalPressure, criticalTemperature, Pressure, currentT, c_ij):
         result_SRK = []
         result_brusilovski = []
         P_arr = []
-        for P in self.frange(self.minimalPressure, self.maximumPressure + 1, self.Pstep):
+        for P in np.arange(self.minimalPressure, self.maximumPressure + self.Pstep , self.Pstep):
             tmp = self.SRK_method(massFractions, acentricFactor, criticalPressure, criticalTemperature, P, currentT, c_ij)[0]
             # print("СРК","Pressure=", Pressure, "L =", tmp)
             tmp1 = self.brusilovski_method(massFractions, acentricFactor, criticalPressure, criticalTemperature, P, currentT, c_ij)[0]
