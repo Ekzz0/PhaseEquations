@@ -4,6 +4,7 @@ import numpy as np
 
 
 class PhaseController():
+
     def __init__(self, inModel):
         """
         Конструктор принимает ссылку на модель.
@@ -13,6 +14,21 @@ class PhaseController():
         self.mView = PhaseView(self, self.mModel)
 
         self.mView.show()
+
+        # Начальные значения
+    def initial_parameters(self):
+        self.mView.Pmin.setValue(3)
+        self.mView.Pmax.setValue(8)
+        self.mView.Pstep.setValue(0.5)
+        self.mView.Temperature.setValue(10)
+        self.mView.filename.setText(r"Test.xlsx")
+
+        self.setPmin()
+        self.setPmax()
+        self.setPstep()
+        self.setTemperature()
+        self.extractData(r"Test.xlsx")
+
 
     def setTemperature(self):
         Temperature = self.mView.Temperature.value()
@@ -53,36 +69,25 @@ class PhaseController():
             self.mModel.massFractions[dict[name]] = data['z'].values[ind]
             ind += 1
 
+
     def start(self):
         '''
         Функция начинающая рассчет
         '''
+
         X, Y_srk, Y_brus = self.mModel.graph(self.mModel.massFractions, self.mModel.acentricFactor, self.mModel.criticalPressure,
                                                self.mModel.criticalTemperature, self.mModel.Pressure, self.mModel.currentT, self.mModel.c_ij)
-        print(X)
-        print(Y_srk)
-        print(Y_brus)
+
+        # print(X)
+        # print(Y_srk)
+        # print(Y_brus)
         self.mView.widget.clearCanvas()
-        self.mView.widget.updateCanvas(X, Y_srk)
-        self.mView.widget.updateCanvas(X, Y_brus)
-        # self.mView.widget.fig.savefig("FilteredSignal")
-        '''
-        NoiseLen= len(self.mModel.NoiseSignal)
-        XN = np.arange(0, 15*NoiseLen, 15)
-        if self.mView.midArifmRunning.isChecked():
-            self.mModel.ClearSignal = self.mModel.runningMidArifm(self.mModel.Num, self.mModel.NoiseSignal)
-            ClearLen = len(self.mModel.ClearSignal)
-            XC = np.linspace(0, 15*NoiseLen, ClearLen)
-        elif self.mView.midArifm.isChecked():
-            self.mModel.ClearSignal = self.mModel.midArifm(self.mModel.Num, self.mModel.NoiseSignal)
-            ClearLen = len(self.mModel.ClearSignal)
-            XC = np.linspace(0, 15 * NoiseLen, ClearLen)
-        self.mView.widget.clearCanvas()
-        self.mView.widget.updateCanvas(XN, self.mModel.NoiseSignal)
-        self.mView.widget.updateCanvas(XC, self.mModel.ClearSignal)
-        self.mView.widget.fig.savefig("FilteredSignal")
-        with open("FilteredSignal.txt", 'w') as file:
-            for value in self.mModel.ClearSignal:
-                file.write(str(value) + '\n')
-        '''
+        self.mView.widget.updateCanvas(X, Y_srk, u'SRK Method')
+        self.mView.widget.updateCanvas(X, Y_brus, u'Brusilovski Method')
+        self.mView.widget.fig.savefig("Result")
+
+        ls = {"X:": X,"Y_srk": Y_srk, "Y_brus": Y_brus}
+        dframe = pd.DataFrame(ls)
+        dframe.to_csv('Results.csv')
+
 

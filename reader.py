@@ -24,23 +24,24 @@ for name in data['name'].values[:]:
     model.massFractions[dict[name]] = data['z'].values[ind]
     ind+=1
 
-model.Pressure = 3
+model.Pressure = 4
 model.currentT =10
-model.maximumPressure =4
-model.minimalPressure =3
-model.Pstep = 0.1
+model.maximumPressure =6
+model.minimalPressure =4
+model.Pstep = 0.5
 
 X,Y1,Y2 = model.graph(model.massFractions, model.acentricFactor, model.criticalPressure,
                                                model.criticalTemperature, model.Pressure, model.currentT, model.c_ij)
-fig = plt.figure()
-plt.xlabel(u'Давление [МПа]', fontsize=12)
-plt.ylabel(u'Процент жидкой фазы [%]', fontsize=12)
-plt.title(u'Зависимость процента жидкой фазы от давления L(P)', fontsize=12)
+with plt.style.context('dark_background'):
+    fig = plt.figure()
+    plt.xlabel(u'Давление [МПа]', fontsize=12)
+    plt.ylabel(u'Процент жидкой фазы [%]', fontsize=12)
+    plt.title(u'Зависимость процента жидкой фазы от давления L(P)', fontsize=12)
 
-plt.plot(X, Y1, label=u'СРК Метод')
-plt.plot(X,Y2,  label = u'Метод Брусиловского')
-fig.legend(loc='center right')
-plt.savefig('L(P)')
-plt.grid(True, color='black')
-plt.show()
+    plt.plot(X, Y1, label=u'СРК Метод')
+    plt.plot(X,Y2,  label = u'Метод Брусиловского')
+    fig.legend(loc='center right')
+    plt.savefig('L(P)')
+    plt.grid(True, color='black')
+    plt.show()
 

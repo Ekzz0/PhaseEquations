@@ -5,7 +5,7 @@ from math import log as ln
 
 class PhaseModel(object):
     """
-    Класс FilterModel представляет собой реализацию модели данных
+    Класс PhaseModel представляет собой реализацию модели данных
 
     В модели хранятся массив значений снятых с датчика
     Модель представляет интерфейс, через который можно работать с хранимыми значениями
@@ -116,6 +116,7 @@ class PhaseModel(object):
             res += z[i] * (K[i] - 1) / (1 + x * (K[i] - 1))
         return res
 
+
     # Отбрасывание комплексный корней
     @staticmethod
     def no_compl(array):
@@ -126,7 +127,6 @@ class PhaseModel(object):
         return ans
 
     # Метод биссекции
-
     def bisection(self, a, b, eps, z, K):
         iter_b = 0
         root = None
@@ -174,7 +174,7 @@ class PhaseModel(object):
         K_0 = []
         K_1 = []
         check = []
-        eps = 0.00001
+        eps = 0.0001
 
         R = 8.314462  # Дж/(моль·K)  если Дж/(кг К), то R*1000/94.288
         N = len(massFractions)
@@ -433,8 +433,8 @@ class PhaseModel(object):
                 F_l[i] = (math.exp(k1[i] - k2[i] - k3[i] + k4[i]))
 
                 K_1[i] = (K_0[i] * F_l[i] / F_v[i])
-                # check[i] = abs(K_1[i] - K_0[i]) / abs(K_0[i])
-                check[i] = abs(F_l[i] / F_v[i] - 1)
+                check[i] = abs(K_1[i] - K_0[i]) / abs(K_0[i])
+                #check[i] = abs(F_l[i] / F_v[i] - 1)
             iter += 1
 
         '''Проверка некоторых выражений'''
@@ -451,6 +451,7 @@ class PhaseModel(object):
         # print("L: ", L, " -> следовательно жидкая фаза существует!")
 
         return L, K_1, iter
+
 
     def SRK_method(self, massFractions, acentricFactor, criticalPressure, criticalTemperature, Pressure, currentT, c_ij):
         '''
@@ -606,13 +607,6 @@ class PhaseModel(object):
 
 
         return L, K_1
-
-    @staticmethod
-    def frange(x, y, step):
-        while x < y:
-            yield x
-            x += step
-
 
 
     def graph(self, massFractions, acentricFactor, criticalPressure, criticalTemperature, Pressure, currentT, c_ij):

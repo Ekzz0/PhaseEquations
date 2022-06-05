@@ -12,7 +12,7 @@ def main():
 
     # Создание контроллера и передача ему ссылки на модель
     controller = PhaseController(model)
-
+    controller.initial_parameters()
     app.exec()
 
 

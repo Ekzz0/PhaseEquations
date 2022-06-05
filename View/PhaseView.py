@@ -15,11 +15,18 @@ class MyCanvas(FigureCanvas):
         super(MyCanvas, self).__init__(self.fig)
         self.setParent(parent)
 
-    def updateCanvas(self, X, Y):
-        self.ax.plot(X,Y)
+    def updateCanvas(self, X, Y, legend):
+        self.ax.plot(X, Y, label=legend)
+        self.ax.set_xlabel('Pressure [MPa]')
+        self.ax.set_ylabel('Percentage of liquid phase [%]')
+        self.ax.legend(loc='lower right')
+        self.ax.grid(True, color='black')
         self.draw()
 
+
+
     def clearCanvas(self):
+
         self.ax.cla()
         self.draw()
 
@@ -38,11 +45,14 @@ class PhaseView(QMainWindow, PhaseObserver, Ui_MainWindow, metaclass= PhaseMeta)
 
         # подключение визуального представления
         self.widget = MyCanvas(self, width=4, height=4, dpi=100)
-        self.widget.setGeometry(457, 10, 421, 428)
+        self.widget.setGeometry(29, 159, 831, 381)
         self.setupUi(self)
 
         # Представление регистрируется как наблюдатель
         self.mModel.addObserver(self)
+
+
+
 
         # Связка события и метода контроллера
         self.browse.clicked.connect(self.browseFiles)
@@ -52,6 +62,7 @@ class PhaseView(QMainWindow, PhaseObserver, Ui_MainWindow, metaclass= PhaseMeta)
         self.Pstep.valueChanged.connect(self.mController.setPstep)
         self.start.clicked.connect(self.mController.start)
 
+        self.setFixedSize(self.size())
     def browseFiles(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '*.xlsx')
         self.filename.setText(fname[0])
